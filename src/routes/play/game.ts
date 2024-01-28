@@ -15,7 +15,5 @@ export const game = {
         let history = JSON.parse(localStorage.getItem('history') as any) || [];
         history.push({ startTime, endTime, answers });
         localStorage.setItem('history', JSON.stringify(history));
-
-        console.log(history);
     }
 };

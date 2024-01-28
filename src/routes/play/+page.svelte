@@ -17,14 +17,12 @@
 	});
 
 	function startGame() {
-		console.log('Starting game....');
 		startTime = new Date();
 		questions = game.generateQuestions();
 		nextQuestion();
 	}
 
 	function resetGame() {
-		console.log('Reseting game....');
 		questions = [];
 		currentQuestion = null;
 		answers = [];
@@ -53,7 +51,6 @@
 	}
 
 	function submitAnswer() {
-		console.log(answer, currentQuestion && answer === 0);
 		if (currentQuestion && answer === 0) {
 			answers.push({ question: currentQuestion, answer });
 		} else if (currentQuestion && answer) {
@@ -71,55 +68,59 @@
 	}
 </script>
 
-{#if currentQuestion}
-	<div class="flex justify-center mt-40">
-		<div class="flex flex-col justify-center w-full max-w-md gap-6 text-center">
-			<div class="text-5xl font-bold">{currentQuestion.question}</div>
-			<input
-				type="number"
-				bind:this={inputElement}
-				bind:value={answer}
-				class="input input-bordered"
-				on:keydown={(e) => e.key === 'Enter' && submitAnswer()}
-			/>
-			<button on:click={() => submitAnswer()} class="btn btn-primary">Submit</button>
-		</div>
-	</div>
-{:else}
-	<div class="flex justify-center mt-20">
-		<div class="space-y-8 text-center">
-			<div class="text-xl">
-				Time: <span class="font-mono font-bold">{calculateTime()}</span> seconds
+<main>
+	{#if currentQuestion}
+		<div class="flex justify-center mt-40">
+			<div class="flex flex-col justify-center w-full max-w-md gap-6 text-center">
+				<div class="text-5xl font-bold">{currentQuestion.question}</div>
+				<input
+					type="number"
+					bind:this={inputElement}
+					bind:value={answer}
+					class="input input-bordered"
+					on:keydown={(e) => e.key === 'Enter' && submitAnswer()}
+				/>
+				<button on:click={() => submitAnswer()} class="btn btn-primary">Submit</button>
 			</div>
-			<div class="flex flex-col gap-8">
-				{#each answers as { question, answer }, i}
-					<div class="flex flex-col justify-between text-lg">
-						<div class="text-xl font-bold">Question {i + 1}</div>
-						<div
-							class={`mt-2 font-mono ${answer === question.answer ? 'text-success' : answer === undefined ? 'text-warning' : 'text-error'}`}
-						>
-							{question.question}
+		</div>
+	{:else}
+		<div class="flex justify-center mt-20">
+			<div class="space-y-8 text-center">
+				<div class="text-xl">
+					Time: <span class="font-mono font-bold">{calculateTime()}</span> seconds
+				</div>
+				<div class="flex flex-col gap-8">
+					{#each answers as { question, answer }, i}
+						<div class="flex flex-col justify-between text-lg">
+							<div class="text-xl font-bold">Question {i + 1}</div>
+							<div
+								class={`mt-2 font-mono ${answer === question.answer ? 'text-success' : answer === undefined ? 'text-warning' : 'text-error'}`}
+							>
+								{question.question}
 
-							{#if answer === question.answer}
-								= <span class="font-bold">{answer}</span>
-							{:else if answer === undefined}
-								<span class="font-bold">≠ No answer</span>
-							{:else}
-								<span class="font-bold"> ≠ {answer}</span>
+								{#if answer === question.answer}
+									= <span class="font-bold">{answer}</span>
+								{:else if answer === undefined}
+									<span class="font-bold">≠ No answer</span>
+								{:else}
+									<span class="font-bold"> ≠ {answer}</span>
+								{/if}
+							</div>
+							{#if answer !== question.answer}
+								<div class="text-base">
+									Correct answer: <span class="font-mono font-bold">{question.answer}</span>
+								</div>
 							{/if}
 						</div>
-						{#if answer !== question.answer}
-							<div class="text-base">
-								Correct answer: <span class="font-mono font-bold">{question.answer}</span>
-							</div>
-						{/if}
-					</div>
-				{/each}
-			</div>
-			<div class="flex gap-4">
-				<button on:click={() => resetGame()} class="btn btn-wide btn-primary"> Play again </button>
-				<a class="btn btn-outline btn-primary btn-wide" href="/history">History</a>
+					{/each}
+				</div>
+				<div class="flex gap-4">
+					<button on:click={() => resetGame()} class="btn btn-wide btn-primary">
+						Play again
+					</button>
+					<a class="btn btn-outline btn-primary btn-wide" href="/history">History</a>
+				</div>
 			</div>
 		</div>
-	</div>
-{/if}
+	{/if}
+</main>
